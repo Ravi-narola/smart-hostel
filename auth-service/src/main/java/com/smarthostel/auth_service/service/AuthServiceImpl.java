@@ -3,6 +3,7 @@ package com.smarthostel.auth_service.service;
 import com.smarthostel.auth_service.entity.User;
 import com.smarthostel.auth_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +13,31 @@ import java.util.List;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User createUser(User user) {
 
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException(
+                    "Username already exists: " + user.getUsername());
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException(
+                    "Email already exists: " + user.getEmail());
+        }
+
         if (user.getEnabled() == null) {
             user.setEnabled(true);
+        }
+
+        if (user.getPassword() != null &&
+                !user.getPassword().isBlank()) {
+
+            user.setPassword(
+                    passwordEncoder.encode(user.getPassword())
+            );
         }
 
         return userRepository.save(user);
@@ -25,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User getUserById(Long id) {
+
         return userRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException(
@@ -38,18 +59,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User getUserByUsername(String username) {
+
         return userRepository.findByUsername(username)
                 .orElseThrow(() ->
                         new RuntimeException(
-                                "User not found with username: " + username));
+                                "User not found with username: "
+                                        + username));
     }
 
     @Override
     public User getUserByEmail(String email) {
+
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new RuntimeException(
-                                "User not found with email: " + email));
+                                "User not found with email: "
+                                        + email));
     }
 
     @Override
@@ -59,10 +84,17 @@ public class AuthServiceImpl implements AuthService {
 
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
         existingUser.setMobileNumber(user.getMobileNumber());
         existingUser.setRole(user.getRole());
         existingUser.setEnabled(user.getEnabled());
+
+        if (user.getPassword() != null &&
+                !user.getPassword().isBlank()) {
+
+            existingUser.setPassword(
+                    passwordEncoder.encode(user.getPassword())
+            );
+        }
 
         return userRepository.save(existingUser);
     }
@@ -71,6 +103,7 @@ public class AuthServiceImpl implements AuthService {
     public void deleteUser(Long id) {
 
         User user = getUserById(id);
+
         userRepository.delete(user);
     }
 }
