@@ -26,7 +26,9 @@ public class StudentController {
             @Valid @RequestBody StudentRequest request) {
 
         Student student = studentMapper.toEntity(request);
-        Student savedStudent = studentService.createStudent(student);
+
+        Student savedStudent =
+                studentService.createStudent(student);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -37,18 +39,21 @@ public class StudentController {
     public ResponseEntity<StudentResponse> getStudentById(
             @PathVariable Long id) {
 
-        Student student = studentService.getStudentById(id);
+        Student student =
+                studentService.getStudentById(id);
 
-        return ResponseEntity.ok(studentMapper.toResponse(student));
+        return ResponseEntity.ok(
+                studentMapper.toResponse(student));
     }
 
     @GetMapping
     public ResponseEntity<List<StudentResponse>> getAllStudents() {
 
-        List<StudentResponse> students = studentService.getAllStudents()
-                .stream()
-                .map(studentMapper::toResponse)
-                .toList();
+        List<StudentResponse> students =
+                studentService.getAllStudents()
+                        .stream()
+                        .map(studentMapper::toResponse)
+                        .toList();
 
         return ResponseEntity.ok(students);
     }
@@ -58,13 +63,14 @@ public class StudentController {
             @PathVariable Long id,
             @Valid @RequestBody StudentRequest request) {
 
-        Student student = studentService.getStudentById(id);
+        Student student =
+                studentMapper.toEntity(request);
 
-        studentMapper.updateEntity(student, request);
+        Student updatedStudent =
+                studentService.updateStudent(id, student);
 
-        Student updatedStudent = studentService.updateStudent(id, student);
-
-        return ResponseEntity.ok(studentMapper.toResponse(updatedStudent));
+        return ResponseEntity.ok(
+                studentMapper.toResponse(updatedStudent));
     }
 
     @DeleteMapping("/{id}")

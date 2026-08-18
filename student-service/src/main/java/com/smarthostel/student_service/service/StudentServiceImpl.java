@@ -15,14 +15,31 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student createStudent(Student student) {
+
+        if (studentRepository.existsByStudentId(student.getStudentId())) {
+            throw new RuntimeException(
+                    "Student ID already exists: " + student.getStudentId());
+        }
+
+        if (studentRepository.existsByEmail(student.getEmail())) {
+            throw new RuntimeException(
+                    "Email already exists: " + student.getEmail());
+        }
+
+        if (student.getStatus() == null || student.getStatus().isBlank()) {
+            student.setStatus("ACTIVE");
+        }
+
         return studentRepository.save(student);
     }
 
     @Override
     public Student getStudentById(Long id) {
+
         return studentRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Student not found with id: " + id));
+                        new RuntimeException(
+                                "Student not found with id: " + id));
     }
 
     @Override
@@ -34,6 +51,26 @@ public class StudentServiceImpl implements StudentService {
     public Student updateStudent(Long id, Student student) {
 
         Student existingStudent = getStudentById(id);
+
+        if (!existingStudent.getStudentId()
+                .equals(student.getStudentId())
+                && studentRepository.existsByStudentId(
+                        student.getStudentId())) {
+
+            throw new RuntimeException(
+                    "Student ID already exists: "
+                            + student.getStudentId());
+        }
+
+        if (!existingStudent.getEmail()
+                .equalsIgnoreCase(student.getEmail())
+                && studentRepository.existsByEmail(
+                        student.getEmail())) {
+
+            throw new RuntimeException(
+                    "Email already exists: "
+                            + student.getEmail());
+        }
 
         existingStudent.setStudentId(student.getStudentId());
         existingStudent.setFirstName(student.getFirstName());
@@ -55,7 +92,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void deleteStudent(Long id) {
+
         Student student = getStudentById(id);
+
         studentRepository.delete(student);
     }
 }
