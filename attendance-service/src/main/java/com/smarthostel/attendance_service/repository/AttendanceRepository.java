@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
+public interface AttendanceRepository
+        extends JpaRepository<Attendance, Long> {
 
     List<Attendance> findByStudentId(Long studentId);
 
@@ -19,12 +20,22 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             LocalDate endDate
     );
 
+    List<Attendance> findByAttendanceDate(LocalDate attendanceDate);
+
+    List<Attendance> findByAttendanceDateBetween(
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    List<Attendance> findByStudentIdAndStatus(
+            Long studentId,
+            String status
+    );
+
     Optional<Attendance> findByStudentIdAndAttendanceDate(
             Long studentId,
             LocalDate attendanceDate
     );
-
-    List<Attendance> findByAttendanceDate(LocalDate attendanceDate);
 
     boolean existsByStudentIdAndAttendanceDate(
             Long studentId,

@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-    name = "attendance",
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk_student_attendance_date",
-            columnNames = {"student_id", "attendance_date"}
-        )
-    }
+        name = "attendance",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_student_attendance_date",
+                        columnNames = {"student_id", "attendance_date"}
+                )
+        }
 )
 @Getter
 @Setter
@@ -40,7 +40,7 @@ public class Attendance {
     @Column(nullable = false, length = 20)
     private String status;
 
-    @Column(length = 255)
+    @Column(length = 500)
     private String remarks;
 
     @Column(nullable = false, updatable = false)
@@ -52,6 +52,10 @@ public class Attendance {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+
+        if (status == null || status.isBlank()) {
+            status = "PRESENT";
+        }
     }
 
     @PreUpdate

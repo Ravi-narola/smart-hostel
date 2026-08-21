@@ -13,11 +13,20 @@ public interface AttendanceService {
 
     List<Attendance> getAllAttendance();
 
-    List<Attendance> getAttendanceByStudent(Long studentId);
+    List<Attendance> getAttendanceByStudentId(Long studentId);
 
     List<Attendance> getAttendanceByDate(LocalDate date);
 
-    Attendance updateAttendance(Long id, Attendance attendance);
+    List<Attendance> getAttendanceByStudentAndDateRange(
+            Long studentId,
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    Attendance updateAttendance(
+            Long id,
+            Attendance attendance
+    );
 
     void deleteAttendance(Long id);
 }

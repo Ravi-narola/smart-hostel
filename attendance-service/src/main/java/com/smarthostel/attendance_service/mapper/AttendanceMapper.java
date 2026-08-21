@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class AttendanceMapper {
 
     public Attendance toEntity(AttendanceRequest request) {
+
         return Attendance.builder()
                 .studentId(request.getStudentId())
                 .attendanceDate(request.getAttendanceDate())
@@ -18,6 +19,7 @@ public class AttendanceMapper {
     }
 
     public AttendanceResponse toResponse(Attendance attendance) {
+
         return AttendanceResponse.builder()
                 .id(attendance.getId())
                 .studentId(attendance.getStudentId())
@@ -34,7 +36,9 @@ public class AttendanceMapper {
             AttendanceRequest request) {
 
         attendance.setStudentId(request.getStudentId());
-        attendance.setAttendanceDate(request.getAttendanceDate());
+        attendance.setAttendanceDate(
+                request.getAttendanceDate()
+        );
         attendance.setStatus(request.getStatus());
         attendance.setRemarks(request.getRemarks());
     }

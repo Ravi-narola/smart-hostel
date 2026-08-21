@@ -26,77 +26,109 @@ public class AttendanceController {
     public ResponseEntity<AttendanceResponse> createAttendance(
             @Valid @RequestBody AttendanceRequest request) {
 
-        Attendance attendance = attendanceMapper.toEntity(request);
-        Attendance savedAttendance =
-                attendanceService.createAttendance(attendance);
+        Attendance attendance =
+                attendanceMapper.toEntity(request);
+
+        Attendance saved =
+                attendanceService.createAttendance(
+                        attendance
+                );
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(attendanceMapper.toResponse(savedAttendance));
+                .body(attendanceMapper.toResponse(saved));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AttendanceResponse> getAttendanceById(
             @PathVariable Long id) {
 
-        Attendance attendance =
-                attendanceService.getAttendanceById(id);
-
         return ResponseEntity.ok(
-                attendanceMapper.toResponse(attendance));
+                attendanceMapper.toResponse(
+                        attendanceService
+                                .getAttendanceById(id)
+                )
+        );
     }
 
     @GetMapping
-    public ResponseEntity<List<AttendanceResponse>> getAllAttendance() {
+    public ResponseEntity<List<AttendanceResponse>>
+    getAllAttendance() {
 
-        List<AttendanceResponse> response =
+        return ResponseEntity.ok(
                 attendanceService.getAllAttendance()
                         .stream()
                         .map(attendanceMapper::toResponse)
-                        .toList();
-
-        return ResponseEntity.ok(response);
+                        .toList()
+        );
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<AttendanceResponse>> getByStudent(
+    public ResponseEntity<List<AttendanceResponse>>
+    getByStudentId(
             @PathVariable Long studentId) {
 
-        List<AttendanceResponse> response =
-                attendanceService.getAttendanceByStudent(studentId)
+        return ResponseEntity.ok(
+                attendanceService
+                        .getAttendanceByStudentId(studentId)
                         .stream()
                         .map(attendanceMapper::toResponse)
-                        .toList();
-
-        return ResponseEntity.ok(response);
+                        .toList()
+        );
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<List<AttendanceResponse>> getByDate(
+    public ResponseEntity<List<AttendanceResponse>>
+    getByDate(
             @PathVariable LocalDate date) {
 
-        List<AttendanceResponse> response =
-                attendanceService.getAttendanceByDate(date)
+        return ResponseEntity.ok(
+                attendanceService
+                        .getAttendanceByDate(date)
                         .stream()
                         .map(attendanceMapper::toResponse)
-                        .toList();
+                        .toList()
+        );
+    }
 
-        return ResponseEntity.ok(response);
+    @GetMapping("/student/{studentId}/range")
+    public ResponseEntity<List<AttendanceResponse>>
+    getByStudentAndDateRange(
+            @PathVariable Long studentId,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+
+        return ResponseEntity.ok(
+                attendanceService
+                        .getAttendanceByStudentAndDateRange(
+                                studentId,
+                                startDate,
+                                endDate
+                        )
+                        .stream()
+                        .map(attendanceMapper::toResponse)
+                        .toList()
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AttendanceResponse> updateAttendance(
+    public ResponseEntity<AttendanceResponse>
+    updateAttendance(
             @PathVariable Long id,
             @Valid @RequestBody AttendanceRequest request) {
 
         Attendance attendance =
                 attendanceMapper.toEntity(request);
 
-        Attendance updatedAttendance =
-                attendanceService.updateAttendance(id, attendance);
+        Attendance updated =
+                attendanceService.updateAttendance(
+                        id,
+                        attendance
+                );
 
         return ResponseEntity.ok(
-                attendanceMapper.toResponse(updatedAttendance));
+                attendanceMapper.toResponse(updated)
+        );
     }
 
     @DeleteMapping("/{id}")

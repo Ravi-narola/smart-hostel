@@ -13,10 +13,16 @@ import java.time.LocalDateTime;
 public class AttendanceResponse {
 
     private Long id;
+
     private Long studentId;
+
     private LocalDate attendanceDate;
+
     private String status;
+
     private String remarks;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 }
