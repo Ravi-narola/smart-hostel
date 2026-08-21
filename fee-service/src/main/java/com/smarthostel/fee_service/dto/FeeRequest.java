@@ -1,5 +1,6 @@
 package com.smarthostel.fee_service.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -17,11 +18,11 @@ public class FeeRequest {
     private Long studentId;
 
     @NotNull
+    @DecimalMin(value = "0.0")
     private BigDecimal amount;
 
+    @DecimalMin(value = "0.0")
     private BigDecimal paidAmount;
-
-    private BigDecimal pendingAmount;
 
     @NotNull
     private String feeType;

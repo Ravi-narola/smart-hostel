@@ -66,6 +66,7 @@ public class Fee {
 
     @PrePersist
     protected void onCreate() {
+
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
 
@@ -73,21 +74,53 @@ public class Fee {
             paidAmount = BigDecimal.ZERO;
         }
 
-        if (pendingAmount == null && amount != null) {
+        if (amount != null) {
+
             pendingAmount = amount.subtract(paidAmount);
+
+            if (pendingAmount.compareTo(BigDecimal.ZERO) < 0) {
+                pendingAmount = BigDecimal.ZERO;
+            }
         }
 
-        if (status == null) {
-            status = "PENDING";
+        if (status == null || status.isBlank()) {
+
+            if (pendingAmount != null &&
+                    pendingAmount.compareTo(BigDecimal.ZERO) == 0) {
+
+                status = "PAID";
+
+            } else {
+
+                status = "PENDING";
+            }
         }
     }
 
     @PreUpdate
     protected void onUpdate() {
+
         updatedAt = LocalDateTime.now();
 
         if (amount != null && paidAmount != null) {
+
             pendingAmount = amount.subtract(paidAmount);
+
+            if (pendingAmount.compareTo(BigDecimal.ZERO) < 0) {
+                pendingAmount = BigDecimal.ZERO;
+            }
+
+            if (pendingAmount.compareTo(BigDecimal.ZERO) == 0) {
+                status = "PAID";
+                paymentDate =
+                        paymentDate == null
+                                ? LocalDate.now()
+                                : paymentDate;
+            } else if (paidAmount.compareTo(BigDecimal.ZERO) > 0) {
+                status = "PARTIAL";
+            } else {
+                status = "PENDING";
+            }
         }
     }
 }

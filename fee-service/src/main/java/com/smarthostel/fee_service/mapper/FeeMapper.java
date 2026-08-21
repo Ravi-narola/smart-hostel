@@ -11,11 +11,24 @@ import java.math.BigDecimal;
 public class FeeMapper {
 
     public Fee toEntity(FeeRequest request) {
+
+        BigDecimal paidAmount =
+                request.getPaidAmount() != null
+                        ? request.getPaidAmount()
+                        : BigDecimal.ZERO;
+
+        BigDecimal pendingAmount =
+                request.getAmount().subtract(paidAmount);
+
+        if (pendingAmount.compareTo(BigDecimal.ZERO) < 0) {
+            pendingAmount = BigDecimal.ZERO;
+        }
+
         return Fee.builder()
                 .studentId(request.getStudentId())
                 .amount(request.getAmount())
-                .paidAmount(request.getPaidAmount())
-                .pendingAmount(request.getPendingAmount())
+                .paidAmount(paidAmount)
+                .pendingAmount(pendingAmount)
                 .feeType(request.getFeeType())
                 .dueDate(request.getDueDate())
                 .paymentDate(request.getPaymentDate())
@@ -27,6 +40,7 @@ public class FeeMapper {
     }
 
     public FeeResponse toResponse(Fee fee) {
+
         return FeeResponse.builder()
                 .id(fee.getId())
                 .studentId(fee.getStudentId())
@@ -45,20 +59,18 @@ public class FeeMapper {
                 .build();
     }
 
-    public void updateEntity(Fee fee, FeeRequest request) {
-        fee.setStudentId(request.getStudentId());
-        fee.setAmount(request.getAmount());
+    public void updateEntity(
+            Fee fee,
+            FeeRequest request) {
 
-        fee.setPaidAmount(
+        BigDecimal paidAmount =
                 request.getPaidAmount() != null
                         ? request.getPaidAmount()
-                        : BigDecimal.ZERO
-        );
+                        : BigDecimal.ZERO;
 
-        fee.setPendingAmount(
-                fee.getAmount().subtract(fee.getPaidAmount())
-        );
-
+        fee.setStudentId(request.getStudentId());
+        fee.setAmount(request.getAmount());
+        fee.setPaidAmount(paidAmount);
         fee.setFeeType(request.getFeeType());
         fee.setDueDate(request.getDueDate());
         fee.setPaymentDate(request.getPaymentDate());
@@ -66,5 +78,14 @@ public class FeeMapper {
         fee.setPaymentMethod(request.getPaymentMethod());
         fee.setTransactionId(request.getTransactionId());
         fee.setRemarks(request.getRemarks());
+
+        BigDecimal pendingAmount =
+                request.getAmount().subtract(paidAmount);
+
+        if (pendingAmount.compareTo(BigDecimal.ZERO) < 0) {
+            pendingAmount = BigDecimal.ZERO;
+        }
+
+        fee.setPendingAmount(pendingAmount);
     }
 }

@@ -2,6 +2,7 @@ package com.smarthostel.fee_service.service;
 
 import com.smarthostel.fee_service.entity.Fee;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface FeeService {
@@ -12,13 +13,27 @@ public interface FeeService {
 
     List<Fee> getAllFees();
 
-    List<Fee> getFeesByStudent(Long studentId);
+    List<Fee> getFeesByStudentId(Long studentId);
 
-    List<Fee> getFeesByStudentAndStatus(Long studentId, String status);
+    List<Fee> getFeesByStudentAndStatus(
+            Long studentId,
+            String status
+    );
 
     List<Fee> getFeesByStatus(String status);
 
     List<Fee> getFeesByType(String feeType);
+
+    List<Fee> getFeesByDueDateRange(
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    List<Fee> getFeesByStudentAndDueDateRange(
+            Long studentId,
+            LocalDate startDate,
+            LocalDate endDate
+    );
 
     Fee updateFee(Long id, Fee fee);
 
