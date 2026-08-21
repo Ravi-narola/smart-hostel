@@ -7,10 +7,12 @@ import com.smarthostel.leave_service.mapper.LeaveMapper;
 import com.smarthostel.leave_service.service.LeaveService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -26,7 +28,9 @@ public class LeaveController {
             @Valid @RequestBody LeaveRequest request) {
 
         Leave leave = leaveMapper.toEntity(request);
-        Leave savedLeave = leaveService.createLeave(leave);
+
+        Leave savedLeave =
+                leaveService.createLeave(leave);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -39,62 +43,109 @@ public class LeaveController {
 
         return ResponseEntity.ok(
                 leaveMapper.toResponse(
-                        leaveService.getLeaveById(id)));
+                        leaveService.getLeaveById(id)
+                )
+        );
     }
 
     @GetMapping
-    public ResponseEntity<List<LeaveResponse>> getAllLeaves() {
+    public ResponseEntity<List<LeaveResponse>>
+    getAllLeaves() {
 
         return ResponseEntity.ok(
                 leaveService.getAllLeaves()
                         .stream()
                         .map(leaveMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<LeaveResponse>> getByStudent(
+    public ResponseEntity<List<LeaveResponse>>
+    getLeavesByStudentId(
             @PathVariable Long studentId) {
 
         return ResponseEntity.ok(
-                leaveService.getLeavesByStudent(studentId)
+                leaveService
+                        .getLeavesByStudentId(studentId)
                         .stream()
                         .map(leaveMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<LeaveResponse>> getByStatus(
+    @GetMapping("/student/{studentId}/status/{status}")
+    public ResponseEntity<List<LeaveResponse>>
+    getLeavesByStudentAndStatus(
+            @PathVariable Long studentId,
             @PathVariable String status) {
 
         return ResponseEntity.ok(
-                leaveService.getLeavesByStatus(status)
+                leaveService
+                        .getLeavesByStudentAndStatus(
+                                studentId,
+                                status
+                        )
                         .stream()
                         .map(leaveMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
-    @GetMapping("/type/{leaveType}")
-    public ResponseEntity<List<LeaveResponse>> getByType(
-            @PathVariable String leaveType) {
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<LeaveResponse>>
+    getLeavesByStatus(
+            @PathVariable String status) {
 
         return ResponseEntity.ok(
-                leaveService.getLeavesByType(leaveType)
+                leaveService
+                        .getLeavesByStatus(status)
                         .stream()
                         .map(leaveMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
+    }
+
+    @GetMapping("/date-range")
+    public ResponseEntity<List<LeaveResponse>>
+    getLeavesByDateRange(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate startDate,
+
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate) {
+
+        return ResponseEntity.ok(
+                leaveService
+                        .getLeavesByDateRange(
+                                startDate,
+                                endDate
+                        )
+                        .stream()
+                        .map(leaveMapper::toResponse)
+                        .toList()
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LeaveResponse> updateLeave(
+    public ResponseEntity<LeaveResponse>
+    updateLeave(
             @PathVariable Long id,
             @Valid @RequestBody LeaveRequest request) {
 
         Leave leave = leaveMapper.toEntity(request);
-        Leave updatedLeave = leaveService.updateLeave(id, leave);
+
+        Leave updatedLeave =
+                leaveService.updateLeave(
+                        id,
+                        leave
+                );
 
         return ResponseEntity.ok(
-                leaveMapper.toResponse(updatedLeave));
+                leaveMapper.toResponse(updatedLeave)
+        );
     }
 
     @DeleteMapping("/{id}")

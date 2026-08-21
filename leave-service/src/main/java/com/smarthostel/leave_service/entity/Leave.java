@@ -8,7 +8,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "leaves")
+@Table(
+        name = "leaves",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_student_leave_dates",
+                        columnNames = {"student_id", "from_date", "to_date"}
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,11 +33,11 @@ public class Leave {
     private Long studentId;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "from_date", nullable = false)
     private LocalDate fromDate;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "to_date", nullable = false)
     private LocalDate toDate;
 
     @NotNull
@@ -55,7 +63,7 @@ public class Leave {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
 
-        if (status == null) {
+        if (status == null || status.isBlank()) {
             status = "PENDING";
         }
     }

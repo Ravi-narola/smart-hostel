@@ -2,6 +2,7 @@ package com.smarthostel.leave_service.service;
 
 import com.smarthostel.leave_service.entity.Leave;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface LeaveService {
@@ -12,11 +13,19 @@ public interface LeaveService {
 
     List<Leave> getAllLeaves();
 
-    List<Leave> getLeavesByStudent(Long studentId);
+    List<Leave> getLeavesByStudentId(Long studentId);
+
+    List<Leave> getLeavesByStudentAndStatus(
+            Long studentId,
+            String status
+    );
 
     List<Leave> getLeavesByStatus(String status);
 
-    List<Leave> getLeavesByType(String leaveType);
+    List<Leave> getLeavesByDateRange(
+            LocalDate startDate,
+            LocalDate endDate
+    );
 
     Leave updateLeave(Long id, Leave leave);
 

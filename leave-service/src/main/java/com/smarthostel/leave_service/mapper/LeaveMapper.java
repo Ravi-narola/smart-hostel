@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class LeaveMapper {
 
     public Leave toEntity(LeaveRequest request) {
+
         return Leave.builder()
                 .studentId(request.getStudentId())
                 .fromDate(request.getFromDate())
@@ -21,6 +22,7 @@ public class LeaveMapper {
     }
 
     public LeaveResponse toResponse(Leave leave) {
+
         return LeaveResponse.builder()
                 .id(leave.getId())
                 .studentId(leave.getStudentId())
@@ -35,7 +37,10 @@ public class LeaveMapper {
                 .build();
     }
 
-    public void updateEntity(Leave leave, LeaveRequest request) {
+    public void updateEntity(
+            Leave leave,
+            LeaveRequest request) {
+
         leave.setStudentId(request.getStudentId());
         leave.setFromDate(request.getFromDate());
         leave.setToDate(request.getToDate());
