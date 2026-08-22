@@ -11,11 +11,6 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
     List<Complaint> findByStudentId(Long studentId);
 
-    List<Complaint> findByStudentIdAndStatus(
-            Long studentId,
-            String status
-    );
-
     List<Complaint> findByStatus(String status);
 
     List<Complaint> findByCategory(String category);
@@ -23,4 +18,14 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     List<Complaint> findByPriority(String priority);
 
     List<Complaint> findByAssignedTo(String assignedTo);
+
+    List<Complaint> findByStudentIdAndStatus(
+            Long studentId,
+            String status
+    );
+
+    List<Complaint> findByStudentIdAndCategory(
+            Long studentId,
+            String category
+    );
 }

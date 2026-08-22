@@ -12,7 +12,7 @@ public interface ComplaintService {
 
     List<Complaint> getAllComplaints();
 
-    List<Complaint> getComplaintsByStudent(Long studentId);
+    List<Complaint> getComplaintsByStudentId(Long studentId);
 
     List<Complaint> getComplaintsByStatus(String status);
 
@@ -22,7 +22,20 @@ public interface ComplaintService {
 
     List<Complaint> getComplaintsByAssignedTo(String assignedTo);
 
-    Complaint updateComplaint(Long id, Complaint complaint);
+    List<Complaint> getComplaintsByStudentAndStatus(
+            Long studentId,
+            String status
+    );
+
+    List<Complaint> getComplaintsByStudentAndCategory(
+            Long studentId,
+            String category
+    );
+
+    Complaint updateComplaint(
+            Long id,
+            Complaint complaint
+    );
 
     void deleteComplaint(Long id);
 }

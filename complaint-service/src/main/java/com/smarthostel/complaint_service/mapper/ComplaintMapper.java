@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class ComplaintMapper {
 
     public Complaint toEntity(ComplaintRequest request) {
+
         return Complaint.builder()
                 .studentId(request.getStudentId())
                 .title(request.getTitle())
@@ -22,6 +23,7 @@ public class ComplaintMapper {
     }
 
     public ComplaintResponse toResponse(Complaint complaint) {
+
         return ComplaintResponse.builder()
                 .id(complaint.getId())
                 .studentId(complaint.getStudentId())

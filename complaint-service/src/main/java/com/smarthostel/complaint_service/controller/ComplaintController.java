@@ -25,13 +25,21 @@ public class ComplaintController {
     public ResponseEntity<ComplaintResponse> createComplaint(
             @Valid @RequestBody ComplaintRequest request) {
 
-        Complaint complaint = complaintMapper.toEntity(request);
+        Complaint complaint =
+                complaintMapper.toEntity(request);
+
         Complaint savedComplaint =
-                complaintService.createComplaint(complaint);
+                complaintService.createComplaint(
+                        complaint
+                );
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(complaintMapper.toResponse(savedComplaint));
+                .body(
+                        complaintMapper.toResponse(
+                                savedComplaint
+                        )
+                );
     }
 
     @GetMapping("/{id}")
@@ -40,85 +48,149 @@ public class ComplaintController {
 
         return ResponseEntity.ok(
                 complaintMapper.toResponse(
-                        complaintService.getComplaintById(id)));
+                        complaintService.getComplaintById(id)
+                )
+        );
     }
 
     @GetMapping
-    public ResponseEntity<List<ComplaintResponse>> getAllComplaints() {
+    public ResponseEntity<List<ComplaintResponse>>
+    getAllComplaints() {
 
         return ResponseEntity.ok(
                 complaintService.getAllComplaints()
                         .stream()
                         .map(complaintMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<ComplaintResponse>> getByStudent(
+    public ResponseEntity<List<ComplaintResponse>>
+    getComplaintsByStudentId(
             @PathVariable Long studentId) {
 
         return ResponseEntity.ok(
-                complaintService.getComplaintsByStudent(studentId)
+                complaintService
+                        .getComplaintsByStudentId(studentId)
                         .stream()
                         .map(complaintMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<ComplaintResponse>> getByStatus(
+    public ResponseEntity<List<ComplaintResponse>>
+    getComplaintsByStatus(
             @PathVariable String status) {
 
         return ResponseEntity.ok(
-                complaintService.getComplaintsByStatus(status)
+                complaintService
+                        .getComplaintsByStatus(status)
                         .stream()
                         .map(complaintMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<ComplaintResponse>> getByCategory(
+    public ResponseEntity<List<ComplaintResponse>>
+    getComplaintsByCategory(
             @PathVariable String category) {
 
         return ResponseEntity.ok(
-                complaintService.getComplaintsByCategory(category)
+                complaintService
+                        .getComplaintsByCategory(category)
                         .stream()
                         .map(complaintMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/priority/{priority}")
-    public ResponseEntity<List<ComplaintResponse>> getByPriority(
+    public ResponseEntity<List<ComplaintResponse>>
+    getComplaintsByPriority(
             @PathVariable String priority) {
 
         return ResponseEntity.ok(
-                complaintService.getComplaintsByPriority(priority)
+                complaintService
+                        .getComplaintsByPriority(priority)
                         .stream()
                         .map(complaintMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/assigned/{assignedTo}")
-    public ResponseEntity<List<ComplaintResponse>> getByAssignedTo(
+    public ResponseEntity<List<ComplaintResponse>>
+    getComplaintsByAssignedTo(
             @PathVariable String assignedTo) {
 
         return ResponseEntity.ok(
-                complaintService.getComplaintsByAssignedTo(assignedTo)
+                complaintService
+                        .getComplaintsByAssignedTo(assignedTo)
                         .stream()
                         .map(complaintMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
+    }
+
+    @GetMapping("/student/{studentId}/status/{status}")
+    public ResponseEntity<List<ComplaintResponse>>
+    getComplaintsByStudentAndStatus(
+            @PathVariable Long studentId,
+            @PathVariable String status) {
+
+        return ResponseEntity.ok(
+                complaintService
+                        .getComplaintsByStudentAndStatus(
+                                studentId,
+                                status
+                        )
+                        .stream()
+                        .map(complaintMapper::toResponse)
+                        .toList()
+        );
+    }
+
+    @GetMapping("/student/{studentId}/category/{category}")
+    public ResponseEntity<List<ComplaintResponse>>
+    getComplaintsByStudentAndCategory(
+            @PathVariable Long studentId,
+            @PathVariable String category) {
+
+        return ResponseEntity.ok(
+                complaintService
+                        .getComplaintsByStudentAndCategory(
+                                studentId,
+                                category
+                        )
+                        .stream()
+                        .map(complaintMapper::toResponse)
+                        .toList()
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ComplaintResponse> updateComplaint(
+    public ResponseEntity<ComplaintResponse>
+    updateComplaint(
             @PathVariable Long id,
             @Valid @RequestBody ComplaintRequest request) {
 
-        Complaint complaint = complaintMapper.toEntity(request);
+        Complaint complaint =
+                complaintMapper.toEntity(request);
+
         Complaint updatedComplaint =
-                complaintService.updateComplaint(id, complaint);
+                complaintService.updateComplaint(
+                        id,
+                        complaint
+                );
 
         return ResponseEntity.ok(
-                complaintMapper.toResponse(updatedComplaint));
+                complaintMapper.toResponse(
+                        updatedComplaint
+                )
+        );
     }
 
     @DeleteMapping("/{id}")
