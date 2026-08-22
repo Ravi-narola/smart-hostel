@@ -9,12 +9,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationServiceImpl implements NotificationService {
+public class NotificationServiceImpl
+        implements NotificationService {
 
     private final NotificationRepository notificationRepository;
 
     @Override
-    public Notification createNotification(Notification notification) {
+    public Notification createNotification(
+            Notification notification) {
 
         if (notification.getIsRead() == null) {
             notification.setIsRead(false);
@@ -25,49 +27,92 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Notification getNotificationById(Long id) {
+
         return notificationRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException(
-                                "Notification not found with id: " + id));
+                                "Notification not found with id: "
+                                        + id
+                        ));
     }
 
     @Override
     public List<Notification> getAllNotifications() {
+
         return notificationRepository.findAll();
     }
 
     @Override
-    public List<Notification> getNotificationsByUser(Long userId) {
-        return notificationRepository
-                .findByUserIdOrderByCreatedAtDesc(userId);
+    public List<Notification> getNotificationsByUserId(
+            Long userId) {
+
+        return notificationRepository.findByUserId(userId);
     }
 
     @Override
-    public List<Notification> getUnreadNotifications(Long userId) {
+    public List<Notification>
+    getNotificationsByUserAndReadStatus(
+            Long userId,
+            Boolean isRead) {
+
         return notificationRepository
-                .findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId);
+                .findByUserIdAndIsRead(
+                        userId,
+                        isRead
+                );
     }
 
     @Override
-    public List<Notification> getReadNotifications(Long userId) {
+    public List<Notification>
+    getNotificationsByReadStatus(Boolean isRead) {
+
         return notificationRepository
-                .findByUserIdAndIsReadTrueOrderByCreatedAtDesc(userId);
+                .findByIsRead(isRead);
     }
 
     @Override
-    public List<Notification> getNotificationsByType(String type) {
+    public List<Notification>
+    getNotificationsByType(String type) {
+
+        return notificationRepository.findByType(type);
+    }
+
+    @Override
+    public long countUnreadNotifications(
+            Long userId) {
+
         return notificationRepository
-                .findByTypeOrderByCreatedAtDesc(type);
+                .countByUserIdAndIsRead(
+                        userId,
+                        false
+                );
     }
 
     @Override
     public Notification markAsRead(Long id) {
 
-        Notification notification = getNotificationById(id);
+        Notification notification =
+                getNotificationById(id);
 
         notification.setIsRead(true);
 
-        return notificationRepository.save(notification);
+        return notificationRepository.save(
+                notification
+        );
+    }
+
+    @Override
+    public Notification markAsUnread(Long id) {
+
+        Notification notification =
+                getNotificationById(id);
+
+        notification.setIsRead(false);
+        notification.setReadAt(null);
+
+        return notificationRepository.save(
+                notification
+        );
     }
 
     @Override
@@ -75,25 +120,37 @@ public class NotificationServiceImpl implements NotificationService {
             Long id,
             Notification notification) {
 
-        Notification existingNotification =
+        Notification existing =
                 getNotificationById(id);
 
-        existingNotification.setUserId(notification.getUserId());
-        existingNotification.setTitle(notification.getTitle());
-        existingNotification.setMessage(notification.getMessage());
-        existingNotification.setType(notification.getType());
+        existing.setUserId(
+                notification.getUserId()
+        );
 
-        if (notification.getIsRead() != null) {
-            existingNotification.setIsRead(notification.getIsRead());
-        }
+        existing.setTitle(
+                notification.getTitle()
+        );
 
-        return notificationRepository.save(existingNotification);
+        existing.setMessage(
+                notification.getMessage()
+        );
+
+        existing.setType(
+                notification.getType()
+        );
+
+        existing.setIsRead(
+                notification.getIsRead()
+        );
+
+        return notificationRepository.save(existing);
     }
 
     @Override
     public void deleteNotification(Long id) {
 
-        Notification notification = getNotificationById(id);
+        Notification notification =
+                getNotificationById(id);
 
         notificationRepository.delete(notification);
     }

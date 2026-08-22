@@ -9,16 +9,23 @@ import org.springframework.stereotype.Component;
 public class NotificationMapper {
 
     public Notification toEntity(NotificationRequest request) {
+
         return Notification.builder()
                 .userId(request.getUserId())
                 .title(request.getTitle())
                 .message(request.getMessage())
                 .type(request.getType())
-                .isRead(request.getIsRead())
+                .isRead(
+                        request.getIsRead() != null
+                                ? request.getIsRead()
+                                : false
+                )
                 .build();
     }
 
-    public NotificationResponse toResponse(Notification notification) {
+    public NotificationResponse toResponse(
+            Notification notification) {
+
         return NotificationResponse.builder()
                 .id(notification.getId())
                 .userId(notification.getUserId())
@@ -44,4 +51,4 @@ public class NotificationMapper {
             notification.setIsRead(request.getIsRead());
         }
     }
-}   
+}

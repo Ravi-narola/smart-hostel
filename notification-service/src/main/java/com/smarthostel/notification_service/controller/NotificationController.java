@@ -22,27 +22,36 @@ public class NotificationController {
     private final NotificationMapper notificationMapper;
 
     @PostMapping
-    public ResponseEntity<NotificationResponse> createNotification(
+    public ResponseEntity<NotificationResponse>
+    createNotification(
             @Valid @RequestBody NotificationRequest request) {
 
         Notification notification =
                 notificationMapper.toEntity(request);
 
-        Notification savedNotification =
-                notificationService.createNotification(notification);
+        Notification saved =
+                notificationService
+                        .createNotification(notification);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(notificationMapper.toResponse(savedNotification));
+                .body(
+                        notificationMapper
+                                .toResponse(saved)
+                );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NotificationResponse> getNotificationById(
+    public ResponseEntity<NotificationResponse>
+    getNotificationById(
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
                 notificationMapper.toResponse(
-                        notificationService.getNotificationById(id)));
+                        notificationService
+                                .getNotificationById(id)
+                )
+        );
     }
 
     @GetMapping
@@ -50,78 +59,127 @@ public class NotificationController {
     getAllNotifications() {
 
         return ResponseEntity.ok(
-                notificationService.getAllNotifications()
+                notificationService
+                        .getAllNotifications()
                         .stream()
                         .map(notificationMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<NotificationResponse>>
-    getByUser(@PathVariable Long userId) {
+    getNotificationsByUserId(
+            @PathVariable Long userId) {
 
         return ResponseEntity.ok(
-                notificationService.getNotificationsByUser(userId)
+                notificationService
+                        .getNotificationsByUserId(userId)
                         .stream()
                         .map(notificationMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
-    @GetMapping("/user/{userId}/unread")
+    @GetMapping("/user/{userId}/read/{isRead}")
     public ResponseEntity<List<NotificationResponse>>
-    getUnread(@PathVariable Long userId) {
+    getNotificationsByUserAndReadStatus(
+            @PathVariable Long userId,
+            @PathVariable Boolean isRead) {
 
         return ResponseEntity.ok(
-                notificationService.getUnreadNotifications(userId)
+                notificationService
+                        .getNotificationsByUserAndReadStatus(
+                                userId,
+                                isRead
+                        )
                         .stream()
                         .map(notificationMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
-    @GetMapping("/user/{userId}/read")
+    @GetMapping("/read/{isRead}")
     public ResponseEntity<List<NotificationResponse>>
-    getRead(@PathVariable Long userId) {
+    getNotificationsByReadStatus(
+            @PathVariable Boolean isRead) {
 
         return ResponseEntity.ok(
-                notificationService.getReadNotifications(userId)
+                notificationService
+                        .getNotificationsByReadStatus(isRead)
                         .stream()
                         .map(notificationMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/type/{type}")
     public ResponseEntity<List<NotificationResponse>>
-    getByType(@PathVariable String type) {
+    getNotificationsByType(
+            @PathVariable String type) {
 
         return ResponseEntity.ok(
-                notificationService.getNotificationsByType(type)
+                notificationService
+                        .getNotificationsByType(type)
                         .stream()
                         .map(notificationMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
-    @PatchMapping("/{id}/read")
-    public ResponseEntity<NotificationResponse> markAsRead(
+    @GetMapping("/user/{userId}/unread/count")
+    public ResponseEntity<Long>
+    countUnreadNotifications(
+            @PathVariable Long userId) {
+
+        return ResponseEntity.ok(
+                notificationService
+                        .countUnreadNotifications(userId)
+        );
+    }
+
+    @PutMapping("/{id}/read")
+    public ResponseEntity<NotificationResponse>
+    markAsRead(
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
                 notificationMapper.toResponse(
-                        notificationService.markAsRead(id)));
+                        notificationService.markAsRead(id)
+                )
+        );
+    }
+
+    @PutMapping("/{id}/unread")
+    public ResponseEntity<NotificationResponse>
+    markAsUnread(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                notificationMapper.toResponse(
+                        notificationService.markAsUnread(id)
+                )
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<NotificationResponse> updateNotification(
+    public ResponseEntity<NotificationResponse>
+    updateNotification(
             @PathVariable Long id,
             @Valid @RequestBody NotificationRequest request) {
 
         Notification notification =
                 notificationMapper.toEntity(request);
 
-        Notification updatedNotification =
-                notificationService.updateNotification(id, notification);
+        Notification updated =
+                notificationService.updateNotification(
+                        id,
+                        notification
+                );
 
         return ResponseEntity.ok(
-                notificationMapper.toResponse(updatedNotification));
+                notificationMapper.toResponse(updated)
+        );
     }
 
     @DeleteMapping("/{id}")
