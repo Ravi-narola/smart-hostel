@@ -9,18 +9,29 @@ import org.springframework.stereotype.Component;
 public class RoomMapper {
 
     public Room toEntity(RoomRequest request) {
+
         return Room.builder()
                 .roomNumber(request.getRoomNumber())
                 .floor(request.getFloor())
                 .capacity(request.getCapacity())
-                .occupiedBeds(request.getOccupiedBeds())
+                .occupiedBeds(
+                        request.getOccupiedBeds() != null
+                                ? request.getOccupiedBeds()
+                                : 0
+                )
                 .roomType(request.getRoomType())
-                .status(request.getStatus())
+                .status(
+                        request.getStatus() != null &&
+                        !request.getStatus().isBlank()
+                                ? request.getStatus()
+                                : "AVAILABLE"
+                )
                 .description(request.getDescription())
                 .build();
     }
 
     public RoomResponse toResponse(Room room) {
+
         return RoomResponse.builder()
                 .id(room.getId())
                 .roomNumber(room.getRoomNumber())
@@ -35,13 +46,28 @@ public class RoomMapper {
                 .build();
     }
 
-    public void updateEntity(Room room, RoomRequest request) {
+    public void updateEntity(
+            Room room,
+            RoomRequest request) {
+
         room.setRoomNumber(request.getRoomNumber());
         room.setFloor(request.getFloor());
         room.setCapacity(request.getCapacity());
-        room.setOccupiedBeds(request.getOccupiedBeds());
+
+        if (request.getOccupiedBeds() != null) {
+            room.setOccupiedBeds(
+                    request.getOccupiedBeds()
+            );
+        }
+
         room.setRoomType(request.getRoomType());
-        room.setStatus(request.getStatus());
+
+        if (request.getStatus() != null &&
+                !request.getStatus().isBlank()) {
+
+            room.setStatus(request.getStatus());
+        }
+
         room.setDescription(request.getDescription());
     }
 }

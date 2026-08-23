@@ -26,11 +26,15 @@ public class RoomController {
             @Valid @RequestBody RoomRequest request) {
 
         Room room = roomMapper.toEntity(request);
-        Room savedRoom = roomService.createRoom(room);
+
+        Room savedRoom =
+                roomService.createRoom(room);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(roomMapper.toResponse(savedRoom));
+                .body(
+                        roomMapper.toResponse(savedRoom)
+                );
     }
 
     @GetMapping("/{id}")
@@ -38,50 +42,89 @@ public class RoomController {
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
-                roomMapper.toResponse(roomService.getRoomById(id)));
+                roomMapper.toResponse(
+                        roomService.getRoomById(id)
+                )
+        );
     }
 
     @GetMapping
-    public ResponseEntity<List<RoomResponse>> getAllRooms() {
+    public ResponseEntity<List<RoomResponse>>
+    getAllRooms() {
 
         return ResponseEntity.ok(
                 roomService.getAllRooms()
                         .stream()
                         .map(roomMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
+    }
+
+    @GetMapping("/number/{roomNumber}")
+    public ResponseEntity<RoomResponse>
+    getRoomByNumber(
+            @PathVariable String roomNumber) {
+
+        return ResponseEntity.ok(
+                roomMapper.toResponse(
+                        roomService.getRoomByNumber(
+                                roomNumber
+                        )
+                )
+        );
     }
 
     @GetMapping("/floor/{floor}")
-    public ResponseEntity<List<RoomResponse>> getByFloor(
+    public ResponseEntity<List<RoomResponse>>
+    getRoomsByFloor(
             @PathVariable Integer floor) {
 
         return ResponseEntity.ok(
                 roomService.getRoomsByFloor(floor)
                         .stream()
                         .map(roomMapper::toResponse)
-                        .toList());
-    }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<RoomResponse>> getByStatus(
-            @PathVariable String status) {
-
-        return ResponseEntity.ok(
-                roomService.getRoomsByStatus(status)
-                        .stream()
-                        .map(roomMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
     }
 
     @GetMapping("/type/{roomType}")
-    public ResponseEntity<List<RoomResponse>> getByType(
+    public ResponseEntity<List<RoomResponse>>
+    getRoomsByType(
             @PathVariable String roomType) {
 
         return ResponseEntity.ok(
                 roomService.getRoomsByType(roomType)
                         .stream()
                         .map(roomMapper::toResponse)
-                        .toList());
+                        .toList()
+        );
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<RoomResponse>>
+    getRoomsByStatus(
+            @PathVariable String status) {
+
+        return ResponseEntity.ok(
+                roomService.getRoomsByStatus(status)
+                        .stream()
+                        .map(roomMapper::toResponse)
+                        .toList()
+        );
+    }
+
+    @GetMapping("/capacity/{capacity}")
+    public ResponseEntity<List<RoomResponse>>
+    getRoomsByMinimumCapacity(
+            @PathVariable Integer capacity) {
+
+        return ResponseEntity.ok(
+                roomService
+                        .getRoomsByMinimumCapacity(capacity)
+                        .stream()
+                        .map(roomMapper::toResponse)
+                        .toList()
+        );
     }
 
     @PutMapping("/{id}")
@@ -90,10 +133,13 @@ public class RoomController {
             @Valid @RequestBody RoomRequest request) {
 
         Room room = roomMapper.toEntity(request);
-        Room updatedRoom = roomService.updateRoom(id, room);
+
+        Room updatedRoom =
+                roomService.updateRoom(id, room);
 
         return ResponseEntity.ok(
-                roomMapper.toResponse(updatedRoom));
+                roomMapper.toResponse(updatedRoom)
+        );
     }
 
     @DeleteMapping("/{id}")
@@ -101,6 +147,7 @@ public class RoomController {
             @PathVariable Long id) {
 
         roomService.deleteRoom(id);
+
         return ResponseEntity.noContent().build();
     }
 }

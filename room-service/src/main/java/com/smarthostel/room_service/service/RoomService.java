@@ -12,11 +12,15 @@ public interface RoomService {
 
     List<Room> getAllRooms();
 
+    Room getRoomByNumber(String roomNumber);
+
     List<Room> getRoomsByFloor(Integer floor);
+
+    List<Room> getRoomsByType(String roomType);
 
     List<Room> getRoomsByStatus(String status);
 
-    List<Room> getRoomsByType(String roomType);
+    List<Room> getRoomsByMinimumCapacity(Integer capacity);
 
     Room updateRoom(Long id, Room room);
 
