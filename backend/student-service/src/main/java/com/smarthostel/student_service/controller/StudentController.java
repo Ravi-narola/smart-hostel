@@ -18,67 +18,62 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentController {
 
-    private final StudentService studentService;
-    private final StudentMapper studentMapper;
+        private final StudentService studentService;
+        private final StudentMapper studentMapper;
 
-    @PostMapping
-    public ResponseEntity<StudentResponse> createStudent(
-            @Valid @RequestBody StudentRequest request) {
+        @PostMapping
+        public ResponseEntity<StudentResponse> createStudent(
+                        @Valid @RequestBody StudentRequest request) {
 
-        Student student = studentMapper.toEntity(request);
+                Student student = studentMapper.toEntity(request);
 
-        Student savedStudent =
-                studentService.createStudent(student);
+                Student savedStudent = studentService.createStudent(student);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(studentMapper.toResponse(savedStudent));
-    }
+                return ResponseEntity
+                                .status(HttpStatus.CREATED)
+                                .body(studentMapper.toResponse(savedStudent));
+        }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<StudentResponse> getStudentById(
-            @PathVariable Long id) {
+        @GetMapping("/{id}")
+        public ResponseEntity<StudentResponse> getStudentById(
+                        @PathVariable Long id) {
 
-        Student student =
-                studentService.getStudentById(id);
+                Student student = studentService.getStudentById(id);
 
-        return ResponseEntity.ok(
-                studentMapper.toResponse(student));
-    }
+                return ResponseEntity.ok(
+                                studentMapper.toResponse(student));
+        }
 
-    @GetMapping
-    public ResponseEntity<List<StudentResponse>> getAllStudents() {
+        @GetMapping
+        public ResponseEntity<List<StudentResponse>> getAllStudents() {
 
-        List<StudentResponse> students =
-                studentService.getAllStudents()
-                        .stream()
-                        .map(studentMapper::toResponse)
-                        .toList();
+                List<StudentResponse> students = studentService.getAllStudents()
+                                .stream()
+                                .map(studentMapper::toResponse)
+                                .toList();
 
-        return ResponseEntity.ok(students);
-    }
+                return ResponseEntity.ok(students);
+        }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<StudentResponse> updateStudent(
-            @PathVariable Long id,
-            @Valid @RequestBody StudentRequest request) {
+        @PutMapping("/{id}")
+        public ResponseEntity<StudentResponse> updateStudent(
+                        @PathVariable Long id,
+                        @Valid @RequestBody StudentRequest request) {
 
-        Student student =
-                studentMapper.toEntity(request);
+                Student student = studentMapper.toEntity(request);
 
-        Student updatedStudent =
-                studentService.updateStudent(id, student);
+                Student updatedStudent = studentService.updateStudent(id, student);
 
-        return ResponseEntity.ok(
-                studentMapper.toResponse(updatedStudent));
-    }
+                return ResponseEntity.ok(
+                                studentMapper.toResponse(updatedStudent));
+        }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(
-            @PathVariable Long id) {
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteStudent(
+                        @PathVariable Long id) {
 
-        studentService.deleteStudent(id);
+                studentService.deleteStudent(id);
 
-        return ResponseEntity.noContent().build();
-    }
+                return ResponseEntity.noContent().build();
+        }
 }
